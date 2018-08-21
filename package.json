@@ -1,0 +1,47 @@
+{
+  "name": "job-change-history",
+  "author": "Jon Lamb",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "start": "react-scripts-ts start",
+    "build": "react-scripts-ts build",
+    "test": "react-scripts-ts test --env=jsdom",
+    "eject": "react-scripts-ts eject"
+  },
+  "proxy": "http://localhost:5000/",
+  "dependencies": {
+    "bootstrap": "^4.1.1",
+    "firebase": "^5.3.0",
+    "react": "^16.4.1",
+    "react-dom": "^16.4.1",
+    "react-dropzone": "^5.0.1",
+    "react-redux": "^5.0.7",
+    "react-redux-firebase": "^2.1.6",
+    "react-router-dom": "^4.3.1",
+    "react-scripts-ts": "2.16.0",
+    "reactstrap": "^6.2.0",
+    "recompose": "^0.27.1",
+    "redux": "^4.0.0",
+    "redux-devtools-extension": "^2.13.5",
+    "redux-thunk": "^2.3.0",
+    "superagent": "^3.8.3"
+  },
+  "devDependencies": {
+    "@types/firebase": "^3.2.1",
+    "@types/jest": "^23.1.5",
+    "@types/node": "^10.5.2",
+    "@types/react": "^16.4.6",
+    "@types/react-dom": "^16.0.6",
+    "@types/react-dropzone": "^4.2.2",
+    "@types/react-redux": "^6.0.4",
+    "@types/react-router-dom": "^4.3.0",
+    "@types/reactstrap": "^6.0.2",
+    "@types/recompose": "^0.26.2",
+    "@types/superagent": "^3.8.3",
+    "typescript": "^2.9.2"
+  },
+  "description": "Update Kpay Job Change History record",
+  "main": "index.js",
+  "license": "MIT"
+}

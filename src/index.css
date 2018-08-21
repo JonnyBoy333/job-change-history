@@ -1,0 +1,32 @@
+body {
+  margin: 0;
+  padding: 0;
+  font-family: sans-serif;
+}
+
+button {
+  margin-bottom: 10px;
+}
+
+.form-group {
+  text-align: left;
+}
+
+.navigationHeader {
+  margin-top: 20px;
+  margin-bottom: 0px;
+  font-weight: 400;
+}
+
+a {
+  color: #7abd43
+}
+
+a:hover {
+  color: #55842e;
+  text-decoration: none;
+}
+
+.error-message {
+  color: red;
+}
