@@ -56,7 +56,7 @@ class Ramen extends React.Component<IRamenProps, IRamenState> {
   public render() {
     return (
       <div>
-        <h1 className={'navigationHeader'}>KPay Login</h1>
+        <h1 className={'navigationHeader'}>K-Pay Login</h1>
         <div className='row' style={{ paddingTop: '20px' }}>
           {this.isZipLoading()}
           {/* <ZipCode handler={this.fetchRamen} onChange={this.handleChange} disabled={this.props.disabled} initialZip={this.state.zip} /> */}

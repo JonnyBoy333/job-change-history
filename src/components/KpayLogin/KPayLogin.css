@@ -13,3 +13,15 @@
   color: #737f85;
   cursor: pointer;
 }
+
+.active-drop-zone {
+  background: #e4e4e4;
+}
+
+.accept-drop-zone {
+  background: #d4edda;
+}
+
+.reject-drop-zone {
+  background: #f8d7da;
+}
