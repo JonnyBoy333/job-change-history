@@ -1,16 +1,17 @@
 import * as React from 'react';
 import ReactDropzone from 'react-dropzone';
 import { Button, FormGroup, Input, Label } from 'reactstrap';
-// import * as request from 'superagent';
 
+import { IStartJob } from '../../actions/jobActions';
 import csvImg from '../../images/csv.png';
 import './KPayLogin.css';
 
-interface IZipProps {
-  handler: (e: React.FormEvent<EventTarget>) => void;
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  initialZip: string;
-  disabled: boolean;
+// interface IZipProps {
+//   initialState: IKPayState | null;
+// }
+
+interface IKPayLoginProps {
+  startJob: IStartJob
 }
 
 interface IKPayState {
@@ -18,17 +19,21 @@ interface IKPayState {
   password: string;
   file: null | File;
   shortname: string;
+  startJobError: string;
+  loginredirect: boolean;
 }
 
-class KPayLogin extends React.Component<IZipProps, IKPayState> {
-  constructor(props: IZipProps) {
+class KPayLogin extends React.Component<IKPayLoginProps, IKPayState> {
+  constructor(props: IKPayLoginProps) {
     super(props);
 
     this.state = {
       file: null,
+      loginredirect: false,
       password: '',
       shortname: '',
-      username: ''
+      startJobError: '',
+      username: '',
     };
   }
 
@@ -37,14 +42,6 @@ class KPayLogin extends React.Component<IZipProps, IKPayState> {
     this.setState({
       file: files[0]
      });
-    // POST to a test endpoint for demo purposes
-    // const req = request.post('https://httpbin.org/post');
-
-    // files.forEach(file => {
-    //   req.attach(file.name, file);
-    // });
-
-    // req.end();
   }
 
   public onUsernameChange = (event: React.ChangeEvent<HTMLInputElement>) => this.setState({ username: event.currentTarget.value });
@@ -59,8 +56,16 @@ class KPayLogin extends React.Component<IZipProps, IKPayState> {
       body: data,
       method: 'POST',
     })
-    .then(res => res.text())
-    .then(res => console.log('Response', res))
+    .then(res => res.json())
+    .then((res) => {
+      console.log('Response', res)
+      const result = res.result;
+      if (result === 'success') {
+        this.props.startJob(true);
+      } else {
+        this.setState({ startJobError: res.error.message });
+      }
+    })
     .catch(err => console.log(err));
   }
 
@@ -76,7 +81,8 @@ class KPayLogin extends React.Component<IZipProps, IKPayState> {
       username,
       password,
       shortname,
-      file
+      file,
+      startJobError
     } = this.state;
     
     const isInvalid =
@@ -102,8 +108,8 @@ class KPayLogin extends React.Component<IZipProps, IKPayState> {
             <Input type='text' name='shortname' id='shortname' placeholder='CompanyABC' onChange={this.onShortnameChange} />
           </FormGroup>
           <FormGroup check={true}>
-            <Input type='checkbox' name='noredirect' id='noredirect'/>
-            <Label>No Login Redirect</Label>
+            <Input type='checkbox' name='loginredirect' id='loginredirect'/>
+            <Label>Has Login Redirect</Label>
           </FormGroup>
           <ReactDropzone
             name='leader-list'
@@ -120,9 +126,7 @@ class KPayLogin extends React.Component<IZipProps, IKPayState> {
             }
           </ReactDropzone>
           <Button block={true} disabled={isInvalid} type='submit' style={{marginTop: '20px'}}>Submit</Button>
-          {/* <Input onChange={props.onChange} placeholder='Enter K-Pay Email' defaultValue={props.initialZip || ''}/>
-            <Input onChange={props.onChange} placeholder='Enter K-Pay Password' defaultValue={props.initialZip || ''}/>
-            <Button color='danger' disabled={props.disabled} onClick={props.handler} style={{ marginBottom: 0 }}>Find Ramen!</Button> */}
+          {startJobError && <p className={'error-message'}>{startJobError}</p>}
         </form>
       </div>
     );

@@ -24,4 +24,19 @@ export default interface IStoreState {
     signInError: null | Error;
     signUpError: null | Error;
   }
+  readonly job: {
+    started: boolean;
+    '2FA': {
+      has2FA: boolean;
+      authMethod: string;
+      code: string;
+      defeated: boolean;
+    }
+    progress: {
+      percent: number,
+      processed: number,
+      total: number
+    }
+    screenshot: string;
+  }
 }

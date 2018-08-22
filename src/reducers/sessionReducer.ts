@@ -29,7 +29,8 @@ function sessionReducer(state = initialState.sessionState, action: Authenticatio
     case keys.SIGN_IN_ERROR : {
       return setSignIpError(state, action);
     }
-    default : return state;
+    default :
+      return state;
   }
 }
 

@@ -1,5 +1,5 @@
 import * as firebase from 'firebase';
-import { IRamen } from '../store/IStoreState';
+import IStoreState, { IRamen } from '../store/IStoreState';
 import { ActionTypeKeys } from './ActionTypeKeys';
 
 export interface IFetchRamenSuccessAction {
@@ -39,7 +39,40 @@ export interface ISignInErrorAction {
 }
 type AuthenticationActionTypes = ISignUpAction | ILogoutAction | ISignInAction | IAuthSuccessAction | ISignUpErrorAction | ISignInErrorAction;
 
+export interface IStartJobAction {
+  readonly type: ActionTypeKeys.START_JOB;
+  readonly payload: IStoreState['job']['started'];
+}
+
+export interface IUpdate2FAAction {
+  readonly type: ActionTypeKeys.UPDATE_2FA;
+  readonly payload: IStoreState['job']['2FA'];
+}
+
+export interface IUpdateProgressAction {
+  readonly type: ActionTypeKeys.UPDATE_PROGRESS;
+  readonly payload: IStoreState['job']['progress'];
+}
+
+export interface IUpdateScreenshotAction {
+  readonly type: ActionTypeKeys.UPDATE_SCREENSHOT;
+  readonly payload: IStoreState['job']['screenshot'];
+}
+
+export interface ISendAuthMessageAction {
+  readonly type: ActionTypeKeys.SEND_AUTH_MESSAGE;
+  readonly payload: IStoreState['job']['2FA']['authMethod'];
+}
+
+export interface ISubmitAuthCodeAction {
+  readonly type: ActionTypeKeys.SUBMIT_AUTH_CODE;
+  readonly payload: IStoreState['job']['2FA']['code'];
+}
+
+type JobActionTypes = IStartJobAction | IUpdate2FAAction | IUpdateProgressAction | IUpdateScreenshotAction | ISendAuthMessageAction | ISubmitAuthCodeAction;
+
 export { 
   ActionTypes,
-  AuthenticationActionTypes
+  AuthenticationActionTypes,
+  JobActionTypes
 };

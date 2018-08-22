@@ -4,13 +4,15 @@ import { AuthenticationActionTypes } from '../actions/ActionTypes';
 import IStoreState from '../store/IStoreState';
 import ramen from './fetchRamenReducer';
 import initialState from './initialState';
+import job from './jobReducer';
 import pendingActions from './pendingActionsReducer';
 import sessionState from './sessionReducer';
 
 const appReducer = combineReducers<IStoreState>({
+  job,
   pendingActions,
   ramen,
-  sessionState
+  sessionState,
 });
 
 const rootReducer = (state: IStoreState, action: AuthenticationActionTypes) => {
