@@ -14,7 +14,7 @@ interface IZipProps {
 }
 
 interface IKPayState {
-  email: string;
+  username: string;
   password: string;
   file: null | File;
   shortname: string;
@@ -25,10 +25,10 @@ class KPayLogin extends React.Component<IZipProps, IKPayState> {
     super(props);
 
     this.state = {
-      email: '',
       file: null,
       password: '',
-      shortname: ''
+      shortname: '',
+      username: ''
     };
   }
 
@@ -47,9 +47,22 @@ class KPayLogin extends React.Component<IZipProps, IKPayState> {
     // req.end();
   }
 
-  public onEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => this.setState({ email: event.currentTarget.value });
+  public onUsernameChange = (event: React.ChangeEvent<HTMLInputElement>) => this.setState({ username: event.currentTarget.value });
   public onPasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => this.setState({ password: event.currentTarget.value });
   public onShortnameChange = (event: React.ChangeEvent<HTMLInputElement>) => this.setState({ shortname: event.currentTarget.value });
+
+  public handleSubmit(event: any) {
+    event.preventDefault();
+    const data = new FormData(event.target);
+    
+    fetch('/api/start', {
+      body: data,
+      method: 'POST',
+    })
+    .then(res => res.text())
+    .then(res => console.log('Response', res))
+    .catch(err => console.log(err));
+  }
 
   
   public render() {
@@ -60,7 +73,7 @@ class KPayLogin extends React.Component<IZipProps, IKPayState> {
     }
 
     const {
-      email,
+      username,
       password,
       shortname,
       file
@@ -68,46 +81,49 @@ class KPayLogin extends React.Component<IZipProps, IKPayState> {
     
     const isInvalid =
       password === '' ||
-      email.indexOf('@') === -1 || 
+      username === '' || 
       shortname === '' ||
       file === null;
 
     return (
       <div className='col-lg-4 offset-lg-4'>
         <p style={{textAlign: 'left'}}>Please provide your K-Pay login credentials and account information for the account to automate.</p>
-        <FormGroup>
-          <Label for='email'>Email</Label>
-          <Input type='email' name='email' id='email' placeholder='something@gmail.com' onChange={this.onEmailChange} />
-        </FormGroup>
-        <FormGroup>
-          <Label for='password'>Password</Label>
-          <Input type='password' name='password' id='password' placeholder='password' onChange={this.onPasswordChange} />
-        </FormGroup>
-        <FormGroup>
-          <Label for='shortname'>Company Shortname</Label>
-          <Input type='text' name='shortname' id='shortname' placeholder='CompanyABC' onChange={this.onShortnameChange} />
-        </FormGroup>
-        <FormGroup check={true}>
-          <Input type='checkbox' />
-          <Label>No Login Redirect</Label>
-        </FormGroup>
-        <ReactDropzone
-          multiple={false}
-          onDrop={this.onDrop}
-          className='drop-zone'
-          activeClassName='active-drop-zone'
-          acceptClassName='accept-drop-zone'
-          rejectClassName='reject-drop-zone'
-        >
-          {file
-            ? <div><img src={csvImg} style={csvImgStyle} alt='csvImg' />{file.name}</div>
-            : 'Drop your Leader field update list here!'
-          }
-        </ReactDropzone>
-        <Button block={true} disabled={isInvalid} type='submit' style={{marginTop: '20px'}}>Submit</Button>
-        {/* <Input onChange={props.onChange} placeholder='Enter K-Pay Email' defaultValue={props.initialZip || ''}/>
-          <Input onChange={props.onChange} placeholder='Enter K-Pay Password' defaultValue={props.initialZip || ''}/>
-          <Button color='danger' disabled={props.disabled} onClick={props.handler} style={{ marginBottom: 0 }}>Find Ramen!</Button> */}
+        <form onSubmit={this.handleSubmit}>
+          <FormGroup>
+            <Label for='username'>Username</Label>
+            <Input type='text' name='username' id='username' placeholder='bob1234' onChange={this.onUsernameChange} />
+          </FormGroup>
+          <FormGroup>
+            <Label for='password'>Password</Label>
+            <Input type='password' name='password' id='password' placeholder='password' onChange={this.onPasswordChange} />
+          </FormGroup>
+          <FormGroup>
+            <Label for='shortname'>Company Shortname</Label>
+            <Input type='text' name='shortname' id='shortname' placeholder='CompanyABC' onChange={this.onShortnameChange} />
+          </FormGroup>
+          <FormGroup check={true}>
+            <Input type='checkbox' name='noredirect' id='noredirect'/>
+            <Label>No Login Redirect</Label>
+          </FormGroup>
+          <ReactDropzone
+            name='leader-list'
+            multiple={false}
+            onDrop={this.onDrop}
+            className='drop-zone'
+            activeClassName='active-drop-zone'
+            acceptClassName='accept-drop-zone'
+            rejectClassName='reject-drop-zone'
+          >
+            {file
+              ? <div><img src={csvImg} style={csvImgStyle} alt='csvImg' />{file.name}</div>
+              : 'Drop your Leader field update list here!'
+            }
+          </ReactDropzone>
+          <Button block={true} disabled={isInvalid} type='submit' style={{marginTop: '20px'}}>Submit</Button>
+          {/* <Input onChange={props.onChange} placeholder='Enter K-Pay Email' defaultValue={props.initialZip || ''}/>
+            <Input onChange={props.onChange} placeholder='Enter K-Pay Password' defaultValue={props.initialZip || ''}/>
+            <Button color='danger' disabled={props.disabled} onClick={props.handler} style={{ marginBottom: 0 }}>Find Ramen!</Button> */}
+        </form>
       </div>
     );
   }
