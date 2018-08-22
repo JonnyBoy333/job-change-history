@@ -1,7 +1,23 @@
+import * as express from 'express';
 import * as functions from 'firebase-functions';
 import * as puppeteer from 'puppeteer';
+import upload from './modules/upload';
 
-export const helloWorld = functions.https.onRequest((request, response) => {
+const app = express();
+
+// Add Files
+upload(app);
+
+app.post('/api/start', (req: any, res) => {
+  console.log('Files', req.files);
+  console.log('Body', req.fields);
+  res.sendStatus(200);
+});
+
+app.post('/api/bingo', (req, res, next) => {
+
+  const body = req.body;
+  console.log('Body', req.body);
 
   (async () => {
     try {
@@ -35,8 +51,13 @@ export const helloWorld = functions.https.onRequest((request, response) => {
     }
   })();
 
-  response.send("Hello from Firebase!");
+  res.send('Form Submitted Successfully');
 });
+
+
+
+export const startAutomation = functions.https.onRequest(app);
+// app.listen(3000, () => console.log('Example app listening on port 3000!'))
 
 
 // async function doTheThing() {
