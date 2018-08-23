@@ -5,10 +5,31 @@ import { ActionTypeKeys as keys } from './ActionTypeKeys';
 import { ISendAuthMessageAction, IStartJobAction, ISubmitAuthCodeAction, IUpdate2FAAction, IUpdateProgressAction, IUpdateScreenshotAction, JobActionTypes } from './ActionTypes';
 
 export type ISendAuthMessage = (id: string, authMethod: IStoreState['job']['2FA']['authMethod']) => (dispatch: Dispatch<JobActionTypes>) => Promise<void>;
+
+// export function signInAsync(email: string, password: string): (dispatch: Dispatch<AuthenticationActionTypes>) => Promise<void> {
+//   return async (dispatch: Dispatch<IAuthSuccessAction | ISignInErrorAction>) => {
+//     try {
+//       const user = await auth.doSignInWithEmailAndPassword(email, password);
+//       if (user.user && user.user.emailVerified) {
+//         dispatch(authSetUser(user.user));
+//       } else {
+//         auth.doSignOut();
+//         throw new Error('Account not verified. Please check your email for a verification email.');
+//       }
+//     } catch (err) {
+//       dispatch(signInError(err));
+//       console.log('Error Signing In', err);
+//     }
+//   }
+// }
+
+
 export function sendAuthMessage(id: string, authMethod: IStoreState['job']['2FA']['authMethod']): (dispatch: Dispatch<JobActionTypes>) => Promise<void> {
   return async (dispatch: Dispatch<ISendAuthMessageAction>) => {
     try {
+      console.log('About to update db');
       await db.sendAuthMessage(id, authMethod);
+      console.log('Updated DB');
       dispatch(sendAuthMessageAction(authMethod));
     } catch (err) {
       console.error(err);

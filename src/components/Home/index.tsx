@@ -81,7 +81,7 @@ class Home extends React.Component<IHomePageProps, {}> {
           {this.isJobStarted(<KpayLogin startJob={this.props.startJob} />, false)}
           {this.isJobStarted(<Progress />, true)}
           {this.isJobStarted(<Screenshot />, true)}
-          {this.has2FA(<TwoFA sendAuthMessage={sendAuthMessage} submitAuthCode={submitAuthCode} userId={this.props.authUser.uid} />)}
+          {this.has2FA(<TwoFA sendAuthMessage={this.props.sendAuthMessage} submitAuthCode={this.props.submitAuthCode} userId={this.props.authUser.uid} />)}
           {this.isJobStarted(<CancelJob />, true)}
         </div>
       </div>

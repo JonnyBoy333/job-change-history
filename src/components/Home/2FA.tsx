@@ -1,7 +1,9 @@
 import * as React from 'react';
 import { Button, FormGroup, Input, Label } from 'reactstrap';
 
-import { ISendAuthMessage, ISubmitAuthCode } from '../../actions/jobActions';
+import { ISubmitAuthCode } from '../../actions/jobActions';
+import successImg from '../../images/success.svg';
+import warnImg from '../../images/warning.jpg';
 import './KPayLogin.css';
 
 interface I2FAState {
@@ -10,7 +12,7 @@ interface I2FAState {
 }
 
 interface I2FAProps {
-  sendAuthMessage: ISendAuthMessage;
+  sendAuthMessage: any;
   submitAuthCode: ISubmitAuthCode;
   userId: string;
 }
@@ -28,27 +30,6 @@ class KPayLogin extends React.Component<I2FAProps, I2FAState> {
   public onAuthMethodChange = (event: React.ChangeEvent<HTMLInputElement>) => this.setState({ authMethod: event.currentTarget.value });
   public onCodeChange = (event: React.ChangeEvent<HTMLInputElement>) => this.setState({ code: event.currentTarget.value });
 
-  public handleSubmit(event: any) {
-    event.preventDefault();
-    // const data = new FormData(event.target);
-
-    // fetch('/api/start', {
-    //   body: data,
-    //   method: 'POST',
-    // })
-    // .then(res => res.json())
-    // .then((res) => {
-    //   console.log('Response', res)
-    //   const result = res.result;
-    //   if (result === 'success') {
-    //     this.props.startJob();
-    //   } else {
-    //     this.setState({ startJobError: res.error.message });
-    //   }
-    // })
-    // .catch(err => console.log(err));
-  }
-
   public handleOptionChange = (changeEvent: any) => {
     this.setState({
       authMethod: changeEvent.target.value
@@ -59,7 +40,7 @@ class KPayLogin extends React.Component<I2FAProps, I2FAState> {
     console.log('Submitting message', this.state);
     const authMethod = this.state.authMethod;
     const userId = this.props.userId;
-    this.props.sendAuthMessage(userId, authMethod);
+    this.props.sendAuthMessage(userId, authMethod)
   }
 
   public submitAuthCode = () => {
@@ -85,10 +66,11 @@ class KPayLogin extends React.Component<I2FAProps, I2FAState> {
 
     return (
       <div className='col-lg-4 offset-lg-4'>
+      <img src={warnImg} height='50px' style={{marginTop: 20}} alt='warning'/>
         <p style={{ textAlign: 'left' }}>Your account has Two Factor Authentication, please fill out the information below to continue.</p>
-        <form className='form-horizontal' onSubmit={this.handleSubmit}>
+        <form className='form-horizontal'>
           <FormGroup>
-            <Label>Authentication Method</Label>
+            <Label>Preferred Authentication Method</Label>
             <FormGroup check={true} >
               <Label check={true} style={labelStyle}>
                 <input
@@ -123,6 +105,7 @@ class KPayLogin extends React.Component<I2FAProps, I2FAState> {
             </FormGroup>
           </FormGroup>
           <Button block={true} disabled={isSendInvalid} color='primary' onClick={this.sendAuthMessage} style={{ marginTop: '20px' }}>Send</Button>
+          <img src={successImg} height='50px' style={{marginTop: 10}} alt='success'/>
           <FormGroup>
             <Label for='code'>Code</Label>
             <Input type='text' name='code' id='code' placeholder='12345' onChange={this.onCodeChange} />
