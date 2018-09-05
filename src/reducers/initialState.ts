@@ -15,11 +15,10 @@ const defaultState: IStoreState = {
     },
     screenshot: '',
     started: false,
+    canceled: false,
+    paused: false,
+    errored: false
   },
-  pendingActions: {
-    fetchRamen: false
-  },
-  ramen: [],
   sessionState: {
     authUser: null,
     signInError: null,

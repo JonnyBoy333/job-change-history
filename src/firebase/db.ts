@@ -20,7 +20,28 @@ export const saveZip = (id: string, zip: string) =>
 export const getZip = (id: string) =>
   db.ref(`users/${id}`).once('value');
 
-export const getJob = (id: string, callback: (job: IStoreState['job'] | null) => void) =>
+interface IStoreStateWithMessage extends IStoreState {
+  job: {
+    started: boolean;
+    '2FA': {
+      has2FA: boolean;
+      authMethod: string;
+      code: string;
+      defeated: boolean;
+      messageSent: boolean;
+    }
+    progress: {
+      percent: number,
+      processed: number,
+      total: number
+    }
+    screenshot: string;
+    canceled: boolean;
+    paused: boolean;
+    errored: boolean;
+  }
+}
+export const getJob = (id: string, callback: (job: IStoreStateWithMessage['job'] | null) => void) =>
   db.ref(`users/${id}`).on('value', (snapshot: firebase.database.DataSnapshot) => {
     const val = snapshot.val();
     // console.log('Snapshot', val);
@@ -36,4 +57,9 @@ export const sendAuthMessage = (id: string, authMethod: string) =>
 
 export const submitAuthCode = (id: string, code: string) =>
   db.ref(`users/${id}/job/2FA`).update({ code })
-  
+
+export const updateMessageSent = (id: string, messageSent: boolean) =>
+  db.ref(`users/${id}/job/2FA`).update({ messageSent })
+
+export const cancelJob = (uid: string, canceledJobState: IStoreState['job']) => 
+  db.ref(`users/${uid}/job`).update({ ...canceledJobState })

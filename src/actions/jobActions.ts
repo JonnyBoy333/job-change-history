@@ -1,8 +1,9 @@
 import { Dispatch } from 'redux';
 import { db } from '../firebase';
+import initialState from '../reducers/initialState';
 import IStoreState from '../store/IStoreState';
 import { ActionTypeKeys as keys } from './ActionTypeKeys';
-import { ISendAuthMessageAction, IStartJobAction, ISubmitAuthCodeAction, IUpdate2FAAction, IUpdateProgressAction, IUpdateScreenshotAction, JobActionTypes } from './ActionTypes';
+import { ICancelJobAction, IErrorJobAction, IPauseJobAction, ISendAuthMessageAction, IStartJobAction, ISubmitAuthCodeAction, IUpdate2FAAction, IUpdateProgressAction, IUpdateScreenshotAction, JobActionTypes } from './ActionTypes';
 
 export type ISendAuthMessage = (id: string, authMethod: IStoreState['job']['2FA']['authMethod']) => (dispatch: Dispatch<JobActionTypes>) => Promise<void>;
 
@@ -27,9 +28,20 @@ export type ISendAuthMessage = (id: string, authMethod: IStoreState['job']['2FA'
 export function sendAuthMessage(id: string, authMethod: IStoreState['job']['2FA']['authMethod']): (dispatch: Dispatch<JobActionTypes>) => Promise<void> {
   return async (dispatch: Dispatch<ISendAuthMessageAction>) => {
     try {
-      console.log('About to update db');
+      console.log('authmethod', authMethod);
+      console.log('UID', id);
+      fetch(`/api/authMethod?authmethod=${authMethod}&uid=${id}`)
+      .then(res => res.json())
+      .then((res) => {
+        console.log('Response', res)
+        const result = res.result;
+        if (result !== 'success') {
+          // this.setState({ error: res.error.message }); // TODO: error handling
+        }
+      })
+      .catch(err => console.log(err));
+
       await db.sendAuthMessage(id, authMethod);
-      console.log('Updated DB');
       dispatch(sendAuthMessageAction(authMethod));
     } catch (err) {
       console.error(err);
@@ -41,8 +53,36 @@ export type ISubmitAuthCode = (id: string, code: IStoreState['job']['2FA']['code
 export function submitAuthCode(id: string, code: IStoreState['job']['2FA']['code']): (dispatch: Dispatch<JobActionTypes>) => Promise<void> {
   return async (dispatch: Dispatch<ISubmitAuthCodeAction>) => {
     try {
+      fetch(`/api/authMethod?authcode=${code}&uid=${id}`)
+      .then(res => res.json())
+      .then((res) => {
+        console.log('Response', res)
+        const result = res.result;
+        if (result !== 'success') {
+          // this.setState({ error: res.error.message }); // TODO: error handling
+        }
+      })
+      .catch(err => console.log(err));
+
       await db.submitAuthCode(id, code);
       dispatch(submitAuthCodeAction(code));
+    } catch (err) {
+      console.error(err);
+    }
+  }
+}
+
+export type ICancelJob = (uid: string) => (dispatch: Dispatch<JobActionTypes>) => Promise<void>;
+export function cancelJob(uid: string): (dispatch: Dispatch<JobActionTypes>) => Promise<void> {
+  return async (dispatch: Dispatch<ICancelJobAction>) => {
+    try {
+
+      const canceledJobState = {
+        ...initialState.job,
+        canceled: true
+      }
+      await db.cancelJob(uid, canceledJobState);
+      dispatch(cancelJobAction(canceledJobState));
     } catch (err) {
       console.error(err);
     }
@@ -52,6 +92,16 @@ export function submitAuthCode(id: string, code: IStoreState['job']['2FA']['code
 export type IStartJob = (started: IStoreState['job']['started']) => IStartJobAction;
 export function startJob(started: IStoreState['job']['started']): IStartJobAction {
   return startJobAction(started);
+}
+
+export type IPauseJob = (paused: IStoreState['job']['paused']) => IPauseJobAction;
+export function pauseJob(started: IStoreState['job']['paused']): IPauseJobAction {
+  return pauseJobAction(started);
+}
+
+export type IErrorJob = (started: IStoreState['job']['errored']) => IErrorJobAction;
+export function errorJob(started: IStoreState['job']['errored']): IErrorJobAction {
+  return errorJobAction(started);
 }
 
 export type IUpdate2FA = (twoFA: IStoreState['job']['2FA']) => IUpdate2FAAction;
@@ -90,6 +140,20 @@ function startJobAction(started: IStoreState['job']['started']): IStartJobAction
   }
 }
 
+function pauseJobAction(paused: IStoreState['job']['paused']): IPauseJobAction {
+  return {
+    payload: paused,
+    type: keys.PAUSE_JOB
+  }
+}
+
+function errorJobAction(errored: IStoreState['job']['errored']): IErrorJobAction {
+  return {
+    payload: errored,
+    type: keys.ERROR_JOB
+  }
+}
+
 function update2FAAction(twoFA: IStoreState['job']['2FA']): IUpdate2FAAction {
   return {
     payload: twoFA,
@@ -108,5 +172,12 @@ function updateImageAction(screenshot: IStoreState['job']['screenshot']): IUpdat
   return {
     payload: screenshot,
     type: keys.UPDATE_SCREENSHOT,
+  }
+}
+
+function cancelJobAction(canceledJobState: IStoreState['job']): ICancelJobAction {
+  return {
+    payload: canceledJobState,
+    type: keys.CANCEL_JOB,
   }
 }

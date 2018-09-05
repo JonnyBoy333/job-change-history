@@ -7,8 +7,7 @@
     "sourceMap": true,
     "target": "es6",
     "moduleResolution": "node",
-    "types": [],
-    "watch": true
+    "types": []
   },
   "compileOnSave": true,
   "include": [

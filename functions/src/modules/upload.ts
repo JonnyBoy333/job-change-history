@@ -4,7 +4,6 @@ import * as contentType from 'content-type';
 import * as getRawBody from 'raw-body';
 
 export default (app) => {
-  // console.log('App', app.use);
   app.use(bodyParser.json())
   app.use(bodyParser.urlencoded({ extended: true }))
   app.use((req, res, next) => {

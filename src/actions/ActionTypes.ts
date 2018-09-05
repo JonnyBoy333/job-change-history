@@ -1,19 +1,6 @@
 import * as firebase from 'firebase';
-import IStoreState, { IRamen } from '../store/IStoreState';
+import IStoreState from '../store/IStoreState';
 import { ActionTypeKeys } from './ActionTypeKeys';
-
-export interface IFetchRamenSuccessAction {
-  readonly type: ActionTypeKeys.FETCH_RAMEN_SUCCESS;
-  readonly payload: IRamen[];
-}
-export interface IFetchRamenInProgressAction {
-  readonly type: ActionTypeKeys.FETCH_RAMEN_INPROGRESS
-}
-export interface IFetchRamenFailAction {
-  readonly type: ActionTypeKeys.FETCH_RAMEN_FAIL;
-  readonly payload: Error;
-}
-type ActionTypes = IFetchRamenSuccessAction | IFetchRamenInProgressAction | IFetchRamenFailAction;
 
 export interface IAuthSuccessAction {
   readonly type: ActionTypeKeys.AUTH_USER_SET;
@@ -69,10 +56,24 @@ export interface ISubmitAuthCodeAction {
   readonly payload: IStoreState['job']['2FA']['code'];
 }
 
-type JobActionTypes = IStartJobAction | IUpdate2FAAction | IUpdateProgressAction | IUpdateScreenshotAction | ISendAuthMessageAction | ISubmitAuthCodeAction;
+export interface ICancelJobAction {
+  readonly type: ActionTypeKeys.CANCEL_JOB;
+  readonly payload: IStoreState['job'];
+}
 
-export { 
-  ActionTypes,
+export interface IPauseJobAction {
+  readonly type: ActionTypeKeys.PAUSE_JOB;
+  readonly payload: IStoreState['job']['paused'];
+}
+
+export interface IErrorJobAction {
+  readonly type: ActionTypeKeys.ERROR_JOB;
+  readonly payload: IStoreState['job']['errored'];
+}
+
+type JobActionTypes = IStartJobAction | IUpdate2FAAction | IUpdateProgressAction | IUpdateScreenshotAction | ISendAuthMessageAction | ISubmitAuthCodeAction | ICancelJobAction | IPauseJobAction | IErrorJobAction;
+
+export {
   AuthenticationActionTypes,
   JobActionTypes
 };

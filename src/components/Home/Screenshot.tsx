@@ -1,14 +1,23 @@
 import * as React from 'react';
-import logo from '../../images/test-screenshot.png';
+import warningPic from '../../images/warning.jpg';
+// import logo from '../../images/test-screenshot.png';
+import IStoreState from '../../store/IStoreState';
 
-const InProgress: React.SFC<{}> = (props) => {
+interface IProgressProps {
+  screenshot: IStoreState['job']['screenshot'];
+  paused: boolean;
+}
+const InProgress: React.SFC<IProgressProps> = (props) => {
   const screenshotStyle = {
+    border: props.paused ? '5px solid #ffc107' : 'none',
     width: '100%'
   }
+  const runningMessage = 'Current Screen:';
+  const pausedMessage = props.paused ? <div><img src={warningPic} width={15} />  bot paused, see below for details</div> : '';
   return (
-    <div className='col-lg-4 offset-lg-4'>
-      <p>Current Screen:</p>
-      <img src={logo} style={screenshotStyle} alt='loading...' />
+    <div className='col-lg-8 offset-lg-2'>
+      <p>{props.paused ?  pausedMessage : runningMessage}</p>
+      {props.screenshot && <img src={props.screenshot} style={screenshotStyle} alt='screenshot' />}
     </div>
   );
 };

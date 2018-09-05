@@ -17,6 +17,15 @@ function sessionReducer(state = initialState.job, action: JobActionTypes) {
     case keys.UPDATE_SCREENSHOT : {
       return applyUpdateScreenshot(state, action.payload);
     }
+    case keys.CANCEL_JOB : {
+      return cancelJob(action.payload);
+    }
+    case keys.PAUSE_JOB : {
+      return pauseJob(state, action.payload);
+    }
+    case keys.ERROR_JOB : {
+      return errorJob(state, action.payload);
+    }
     default :
       return state;
   }
@@ -40,6 +49,20 @@ const applyUpdateProgress = (state: IStoreState['job'], payload: IStoreState['jo
 const applyUpdateScreenshot = (state: IStoreState['job'], payload: IStoreState['job']['screenshot']) => ({
   ...state,
   screenshot: payload
+});
+
+const cancelJob = (payload: IStoreState['job']) => ({
+  ...payload
+});
+
+const pauseJob = (state: IStoreState['job'], payload: IStoreState['job']['paused']) => ({
+  ...state,
+  paused: payload
+});
+
+const errorJob = (state: IStoreState['job'], payload: IStoreState['job']['errored']) => ({
+  ...state,
+  paused: payload
 });
 
 export default sessionReducer;
