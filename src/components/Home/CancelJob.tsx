@@ -13,7 +13,6 @@ const InProgress: React.SFC<ICancelJobProps> = (props) => {
 
   const cancelJob = (event: any) => {
     event.preventDefault();
-    // props.cancelJob('bingo', 'bango');
     props.cancelJob(props.uid)
   };
   return (

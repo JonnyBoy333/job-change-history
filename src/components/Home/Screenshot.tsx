@@ -1,6 +1,5 @@
 import * as React from 'react';
 import warningPic from '../../images/warning.jpg';
-// import logo from '../../images/test-screenshot.png';
 import IStoreState from '../../store/IStoreState';
 
 interface IProgressProps {

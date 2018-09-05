@@ -31,16 +31,11 @@ interface IHomePageState {
   messageSent: boolean;
 }
 
-// const Home = (props: IHomePageProps) => {
 class Home extends React.Component<IHomePageProps, IHomePageState> {
   constructor(props: IHomePageProps) {
     super(props);
 
     this.state = { messageSent: false };
-    // this.handleChange = this.handleChange.bind(this);
-    // this.fetchRamen = this.fetchRamen.bind(this);
-    // this.isLoading = this.isLoading.bind(this);
-    // this.isZipLoading = this.isZipLoading.bind(this);
   }
 
   public componentDidMount() {

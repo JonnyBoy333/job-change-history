@@ -46,10 +46,6 @@ class KPayLogin extends React.Component<IKPayLoginProps, IKPayState> {
   //     file: files[0]
   //   });
   // }
-  // public onClick = () => {
-  //   console.log('Clicked');
-  //   this.setState({ filesWereDropped: false })
-  // }
 
   public onDrop = (acceptedFiles: File[], rejectedFiles: any, e: any) => {
     console.log(acceptedFiles);
@@ -82,7 +78,6 @@ class KPayLogin extends React.Component<IKPayLoginProps, IKPayState> {
       data.append('leader-list', this.state.file, this.state.file.name);
     }
 
-    // fetch('/api/start', {
     fetch(`${serverUrl}/api/start`, {
       body: data,
       method: 'POST',
